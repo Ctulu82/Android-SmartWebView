@@ -54,6 +54,7 @@ import android.view.WindowManager;
 import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
 import android.webkit.GeolocationPermissions;
+import android.webkit.PermissionRequest;
 import android.webkit.SslErrorHandler;
 import android.webkit.URLUtil;
 import android.webkit.ValueCallback;
@@ -94,7 +95,9 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -240,6 +243,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 		// ------ PLAY AREA :: for debug purposes only ------ //
 
+		// 시작하자마자 카메라 권한 강제로 설정.
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			int hasCameraPermission = checkSelfPermission(Manifest.permission.CAMERA);
+
+			List<String> permissions = new ArrayList<String>();
+
+			if (hasCameraPermission != PackageManager.PERMISSION_GRANTED) {
+				permissions.add(Manifest.permission.CAMERA);
+			}
+
+			if (!permissions.isEmpty()) {
+				requestPermissions(permissions.toArray(new String[permissions.size()]), 111);
+			}
+		}
 		// ------- PLAY AREA END ------ //
 
         // prevent app from being started again when it is still alive in the background
@@ -586,7 +603,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
 
-	    	// overload the geoLocations permissions prompt to always allow instantly as app permission was granted previously
+			// Grant permissions for cam
+			@Override
+			public void onPermissionRequest(final PermissionRequest request) {
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+					request.grant(request.getResources());
+				}
+			}
+
+			// overload the geoLocations permissions prompt to always allow instantly as app permission was granted previously
 			public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
 				if(Build.VERSION.SDK_INT < 23 || check_permission(1)){
 					// location permissions were granted previously so auto-approve
