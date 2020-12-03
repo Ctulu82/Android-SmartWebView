@@ -306,7 +306,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 				@Override
 				public void onScrollChanged() {
 					if (asw_view.getScrollY() == 0) {
-						pullfresh.setEnabled(true);
+						pullfresh.setEnabled(false);
 					} else {
 						pullfresh.setEnabled(false);
 					}
