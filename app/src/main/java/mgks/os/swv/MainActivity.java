@@ -365,6 +365,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		webSettings.setAllowUniversalAccessFromFileURLs(true);
 		webSettings.setUseWideViewPort(true);
 		webSettings.setDomStorageEnabled(true);
+		webSettings.setLoadWithOverviewMode(true);
+		webSettings.setUseWideViewPort(true);
 
 		if(!ASWP_CP) {
 			asw_view.setOnLongClickListener(new View.OnLongClickListener() {
